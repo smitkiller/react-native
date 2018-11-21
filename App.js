@@ -1,53 +1,53 @@
-import React, {Component} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
-import { createMaterialTopTabNavigator,createStackNavigator } from 'react-navigation';
+import React from 'react';
+import { Text } from 'react-native';
+import { NativeRouter, Link } from 'react-router-native';
+import { BottomNavigation,Tab} from 'react-router-navigation';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+
+import Home from './components/Home';
 import Profile from './components/Profile';
-import Homes from './components/Homes';
-/*
-const instructions = Platform.select({
-  ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
-  android:
-    'Double tap R on your keyboard to reload,\n' +
-    'Shake or press menu button for dev menu',
-});
-*/
 
-const HomeTab = createMaterialTopTabNavigator({
-  Homes: Homes,
-  Profile: Profile
-})
+const renderTabIcon = props => {
+    const { route, focused, tabActiveTintColor, tabTintColor,horizontal } = props;
+    let iconName;
+    let tabColor;
+  if (route.name === '/') {
+          iconName = `ios-home`;
+          tabColor=focused?tabActiveTintColor:tabTintColor;
+        } else if (route.name  === 'Reserve') {
+          iconName = `ios-save$`;
+        }
+        else if (route.name === '/profile') {
+          iconName = `ios-settings`;
+          tabColor=focused?tabActiveTintColor:tabTintColor;
+        }
 
-
-const Stack = createStackNavigator({
-  Home: HomeTab
-});
-
-
-
-export default class App extends Component{
-  render() {
-    return (     
-        <View style={styles.container}>
-          <Stack />
-        </View>
-    
-    );
+        // You can return any component that you like here! We usually use an
+        // icon component from react-native-vector-icons
+        return <Ionicons name={iconName} size={horizontal ? 20 : 25} color={tabColor} />;
   }
-}
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff'
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-});
+const App = () => (
+  <NativeRouter>
+    <BottomNavigation
+        tabTintColor="gray"
+        tabActiveTintColor="red"
+      >
+      <Tab
+        exact
+        path="/"
+        label="Home"
+        component={Home}
+        renderTabIcon={renderTabIcon}
+      />
+       <Tab
+        path="/profile"
+        label="Profile"
+        component={Profile}
+        renderTabIcon={renderTabIcon}
+      />
+    </BottomNavigation>
+  </NativeRouter>
+)
+
+export default App;
